@@ -12,7 +12,7 @@ from telegram.ext import (
     filters
 )
 
-TOKEN = "8332172370:AAFAiNAtB8xBjHs7gnwVRXAjo0YrMinM7As"  # Bot tokeningiz
+TOKEN = "8527407637:AAEXEHfaEaXLtPs6Safs8tcdYepHTrLjJys"  # Bot tokeningiz
 PRIVATE_GROUP_ID = -1003267783623  # Shaxsiy admin guruhingiz ID
 OWNER_ID = 7740552653  # Asosiy admin (sizning Telegram ID)
 
@@ -48,9 +48,9 @@ def get_main_menu(user_id):
         ]
         return InlineKeyboardMarkup(buttons)
     else:
-        # Oddiy foydalanuvchi uchun admin bilan bog‘lanish tugmasi
+        # Oddiy foydalanuvchi uchun "adminga bog'lanish" tugmasi
         buttons = [
-            [InlineKeyboardButton("👤 Admin bilan bog‘lanish", url=f"https://t.me/{OWNER_ID}")]
+            [InlineKeyboardButton("👤 Admin bilan bog‘lanish", callback_data="contact_admin")]
         ]
         return InlineKeyboardMarkup(buttons)
 
@@ -60,6 +60,20 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = query.from_user.id
     await query.answer()
 
+    # Oddiy foydalanuvchi adminga murojaat qilsa
+    if query.data == "contact_admin":
+        user = query.from_user
+        # Adminga xabar yuborish
+        await context.bot.send_message(
+            chat_id=OWNER_ID,
+            text=f"Foydalanuvchi {user.full_name} "
+                 f"(@{user.username if user.username else 'username yo‘q'}) "
+                 f"ID: {user.id} admin bilan bog‘lanmoqchi."
+        )
+        await query.message.reply_text("✅ Sizning xabaringiz adminga yuborildi.")
+        return
+
+    # Kalit so'zlar va admin tugmalari (faqat adminlar uchun)
     if query.data == "add_keyword":
         await query.message.reply_text("Kalit so‘zni yozing:")
         context.user_data["adding_keyword"] = True

@@ -12,7 +12,7 @@ from telegram.ext import (
     filters
 )
 
-TOKEN = "8527407637:AAEXEHfaEaXLtPs6Safs8tcdYepHTrLjJys"  # Bot tokeningiz
+TOKEN = "8332172370:AAFAiNAtB8xBjHs7gnwVRXAjo0YrMinM7As"  # Bot tokeningiz
 PRIVATE_GROUP_ID = -1003267783623  # Shaxsiy admin guruhingiz ID
 OWNER_ID = 7740552653  # Asosiy admin (sizning Telegram ID)
 
@@ -22,7 +22,13 @@ ADMINS = [OWNER_ID]    # Adminlar ro'yxati
 # --- Start komandasi ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    greeting = f"Assalomu alaykum, {update.effective_user.full_name}! ✅"
+    if user_id == OWNER_ID:
+        greeting = f"Assalomu alaykum, {update.effective_user.full_name}! ✅"
+    else:
+        greeting = (
+            "Botdan faqat admin bo‘lganlar foydalana oladi! "
+            "Botdan foydalanish uchun adminga murojaat qiling!"
+        )
     await update.message.reply_text(
         greeting,
         reply_markup=get_main_menu(user_id)
@@ -30,21 +36,23 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- Menyu tugmalari ---
 def get_main_menu(user_id):
-    buttons = [
-        [InlineKeyboardButton("➕ Kalit so‘z qo‘shish", callback_data="add_keyword")],
-        [InlineKeyboardButton("📝 Kalit so‘zlarni ko‘rish", callback_data="view_keywords")],
-        [InlineKeyboardButton("❌ Kalit so‘z o‘chirish", callback_data="delete_keyword")]
-    ]
-
-    # Faqat asosiy admin uchun admin menyu
     if user_id == OWNER_ID:
-        buttons += [
+        # Faqat adminlar uchun asl menyu
+        buttons = [
+            [InlineKeyboardButton("➕ Kalit so‘z qo‘shish", callback_data="add_keyword")],
+            [InlineKeyboardButton("📝 Kalit so‘zlarni ko‘rish", callback_data="view_keywords")],
+            [InlineKeyboardButton("❌ Kalit so‘z o‘chirish", callback_data="delete_keyword")],
             [InlineKeyboardButton("➕ Admin qo‘shish", callback_data="add_admin")],
             [InlineKeyboardButton("📝 Adminlarni ko‘rish", callback_data="view_admins")],
             [InlineKeyboardButton("❌ Admin o‘chirish", callback_data="delete_admin")]
         ]
-
-    return InlineKeyboardMarkup(buttons)
+        return InlineKeyboardMarkup(buttons)
+    else:
+        # Oddiy foydalanuvchi uchun admin bilan bog‘lanish tugmasi
+        buttons = [
+            [InlineKeyboardButton("👤 Admin bilan bog‘lanish", url=f"https://t.me/{OWNER_ID}")]
+        ]
+        return InlineKeyboardMarkup(buttons)
 
 # --- CallbackQuery handler ---
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):

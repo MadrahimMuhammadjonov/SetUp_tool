@@ -12,7 +12,7 @@ from telegram.ext import (
     filters
 )
 
-TOKEN = "8527407637:AAEXEHfaEaXLtPs6Safs8tcdYepHTrLjJys"  # Bot tokeningiz
+TOKEN = "8332172370:AAFAiNAtB8xBjHs7gnwVRXAjo0YrMinM7As"  # Bot tokeningiz
 PRIVATE_GROUP_ID = -1003267783623  # Shaxsiy admin guruhingiz ID
 OWNER_ID = 7740552653  # Asosiy admin (sizning Telegram ID)
 
